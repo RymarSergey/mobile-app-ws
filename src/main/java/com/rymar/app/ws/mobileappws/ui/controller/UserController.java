@@ -1,5 +1,6 @@
 package com.rymar.app.ws.mobileappws.ui.controller;
 
+import com.rymar.app.ws.mobileappws.exceptions.UserServiceException;
 import com.rymar.app.ws.mobileappws.ui.model.request.UpdateUserDetailsRequestModel;
 import com.rymar.app.ws.mobileappws.ui.model.request.UserDetailsRequestModel;
 import com.rymar.app.ws.mobileappws.ui.model.response.UserRest;
@@ -30,9 +31,7 @@ public class UserController {
 
     @GetMapping(path = "/{userId}", produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<UserRest> getUser(@PathVariable String userId) {
-        String firstName=null;
-        //
-        int firsstNameLength=firstName.length();
+       if(true) throw new UserServiceException("Throw my exception");
 
        if (users.containsKey(userId)){
         return new ResponseEntity<>(users.get(userId), HttpStatus.OK);
