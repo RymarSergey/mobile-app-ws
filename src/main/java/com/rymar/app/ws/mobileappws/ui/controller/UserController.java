@@ -20,7 +20,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/users")//http://localhost:8080/users
 public class UserController {
-    Map<String,UserRest> users;
+   private Map<String,UserRest> users;
     @GetMapping
     public String getUsers(@RequestParam(value = "page", defaultValue = "1") int page,
                            @RequestParam(value = "limit", defaultValue = "25") int limit,
@@ -30,6 +30,10 @@ public class UserController {
 
     @GetMapping(path = "/{userId}", produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<UserRest> getUser(@PathVariable String userId) {
+        String firstName=null;
+        //
+        int firsstNameLength=firstName.length();
+
        if (users.containsKey(userId)){
         return new ResponseEntity<>(users.get(userId), HttpStatus.OK);
        } else return new ResponseEntity<>( HttpStatus.NO_CONTENT);
@@ -48,7 +52,7 @@ public class UserController {
         if (users==null) users = new HashMap<>();
         users.put(userRest.getUserId(),userRest);
 
-        return new ResponseEntity<UserRest>(userRest, HttpStatus.OK);
+        return new ResponseEntity<>(userRest, HttpStatus.OK);
     }
 
     @PutMapping(path = "/{userId}",consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
