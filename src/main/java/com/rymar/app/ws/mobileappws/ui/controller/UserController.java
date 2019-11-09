@@ -4,6 +4,9 @@ import com.rymar.app.ws.mobileappws.exceptions.UserServiceException;
 import com.rymar.app.ws.mobileappws.ui.model.request.UpdateUserDetailsRequestModel;
 import com.rymar.app.ws.mobileappws.ui.model.request.UserDetailsRequestModel;
 import com.rymar.app.ws.mobileappws.ui.model.response.UserRest;
+import com.rymar.app.ws.mobileappws.userservice.UserService;
+import com.rymar.app.ws.mobileappws.userservice.impl.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /*
  *
@@ -21,7 +23,9 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/users")//http://localhost:8080/users
 public class UserController {
-   private Map<String,UserRest> users;
+    private Map<String,UserRest> users;
+    @Autowired
+    UserService userService;
     @GetMapping
     public String getUsers(@RequestParam(value = "page", defaultValue = "1") int page,
                            @RequestParam(value = "limit", defaultValue = "25") int limit,
@@ -41,15 +45,8 @@ public class UserController {
     @PostMapping(consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<UserRest> createUser(@Valid @RequestBody UserDetailsRequestModel userDetailsRequestModel) {
-        UserRest userRest = new UserRest();
-        userRest.setEmail(userDetailsRequestModel.getEmail());
-        userRest.setFirstName(userDetailsRequestModel.getFirstName());
-        userRest.setLastName(userDetailsRequestModel.getLastName());
+        UserRest userRest= userService.createUser(userDetailsRequestModel);
 
-        String userId= String.valueOf(UUID.randomUUID());
-        userRest.setUserId(userId);
-        if (users==null) users = new HashMap<>();
-        users.put(userRest.getUserId(),userRest);
 
         return new ResponseEntity<>(userRest, HttpStatus.OK);
     }
